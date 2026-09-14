@@ -1,15 +1,13 @@
 """
 MOIL AI - Unified Backend (M4)
 
-Unified backend for:
+Provides:
 - Authentication
 - Mine management
 - Exploration & GIS
 - Production & Risk
-- AI recommendations
+- AI Recommendations
 """
-
-import os
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -42,33 +40,29 @@ app = FastAPI(
 
 
 # ==========================================
-# CORS
+# CORS CONFIGURATION
 # ==========================================
 
-default_origins = [
+origins = [
+
+    # Local development
+
     "http://127.0.0.1:5500",
     "http://localhost:5500",
+
     "http://127.0.0.1:5501",
     "http://localhost:5501",
+
+
+    # Deployed Render Frontend
+
+    "https://moil-ai-industrial-intelligence-1.onrender.com",
+
 ]
-
-extra_origins = os.getenv(
-    "EXTRA_CORS_ORIGINS",
-    ""
-)
-
-origins = (
-    default_origins
-    +
-    [
-        origin.strip()
-        for origin in extra_origins.split(",")
-        if origin.strip()
-    ]
-)
 
 
 app.add_middleware(
+
     CORSMiddleware,
 
     allow_origins=origins,
@@ -78,6 +72,7 @@ app.add_middleware(
     allow_methods=["*"],
 
     allow_headers=["*"],
+
 )
 
 
@@ -97,16 +92,20 @@ app.include_router(ai.router)
 
 
 # ==========================================
-# ROOT
+# HOME API
 # ==========================================
 
 @app.get("/")
 def home():
 
     return {
+
         "message": "MOIL AI Platform API",
+
         "status": "running",
+
         "version": "2.0.0"
+
     }
 
 
@@ -118,6 +117,9 @@ def home():
 def health_check():
 
     return {
+
         "status": "healthy",
+
         "service": "MOIL AI Backend"
+
     }
