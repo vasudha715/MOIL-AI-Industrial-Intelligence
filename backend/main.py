@@ -1,46 +1,26 @@
-"""
-MOIL AI - Unified Backend (M4)
-
-Provides:
-- Authentication
-- Mine management
-- Exploration & GIS
-- Production & Risk
-- AI Recommendations
-"""
+import os
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from database import Base, engine
-import models  # noqa: F401
+import models
 
 from routers import auth_router, mines, exploration, production, ai
 
 
-# ==========================================
-# DATABASE
-# ==========================================
-
 Base.metadata.create_all(bind=engine)
 
 
-# ==========================================
-# FASTAPI APPLICATION
-# ==========================================
-
 app = FastAPI(
     title="MOIL AI Platform API",
-    description=(
-        "Unified backend for manganese exploration, "
-        "production, risk monitoring and AI intelligence."
-    ),
+    description="Unified backend for manganese exploration, production, and AI intelligence.",
     version="2.0.0",
 )
 
 
 # ==========================================
-# CORS CONFIGURATION
+# CORS
 # ==========================================
 
 origins = [
@@ -54,7 +34,7 @@ origins = [
     "http://localhost:5501",
 
 
-    # Deployed Render Frontend
+    # Deployed Render frontend
 
     "https://moil-ai-industrial-intelligence-1.onrender.com",
 
@@ -92,7 +72,7 @@ app.include_router(ai.router)
 
 
 # ==========================================
-# HOME API
+# HOME
 # ==========================================
 
 @app.get("/")
@@ -110,7 +90,7 @@ def home():
 
 
 # ==========================================
-# HEALTH CHECK
+# HEALTH
 # ==========================================
 
 @app.get("/health")
