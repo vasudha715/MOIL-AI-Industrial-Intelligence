@@ -1,0 +1,1650 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>
+    MOIL AI — Industrial Exploration Dashboard
+  </title>
+
+
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  >
+
+
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+  >
+
+
+  <link
+    rel="stylesheet"
+    href="css/style.css"
+  >
+
+</head>
+
+
+<body>
+
+
+  <!-- ====================================== -->
+  <!-- SIDEBAR -->
+  <!-- ====================================== -->
+
+  <aside class="sidebar p-3">
+
+
+    <div
+      class="d-flex align-items-center gap-2 mb-4 px-2"
+    >
+
+
+      <i
+        class="bi bi-geo-alt-fill text-warning fs-4"
+      ></i>
+
+
+      <div>
+
+
+        <h6
+          class="mb-0 fw-bold text-white"
+        >
+
+          MOIL AI
+
+        </h6>
+
+
+        <span
+          class="text-warning fw-semibold"
+          style="font-size: 10px;"
+        >
+
+          INDUSTRIAL EXPLORATION
+
+        </span>
+
+
+      </div>
+
+
+    </div>
+
+
+
+    <!-- NAVIGATION -->
+
+    <nav
+      class="nav flex-column gap-1 flex-grow-1"
+    >
+
+
+      <a
+        href="dashboard.html"
+        class="nav-link-custom active"
+      >
+
+        <i class="bi bi-speedometer2"></i>
+
+        Dashboard
+
+      </a>
+
+
+
+      <a
+        href="exploration.html"
+        class="nav-link-custom"
+      >
+
+        <i class="bi bi-compass"></i>
+
+        Exploration GIS
+
+      </a>
+
+
+
+      <a
+        href="#"
+        class="nav-link-custom"
+      >
+
+        <i class="bi bi-satellite"></i>
+
+        Satellite Analysis
+
+      </a>
+
+
+
+      <a
+        href="#"
+        class="nav-link-custom"
+      >
+
+        <i class="bi bi-mountain"></i>
+
+        Terrain Analysis
+
+      </a>
+
+
+
+      <a
+        href="ai-recommendations.html"
+        class="nav-link-custom"
+      >
+
+        <i class="bi bi-cpu"></i>
+
+        AI Recommendations
+
+      </a>
+
+
+    </nav>
+
+
+
+    <!-- SYSTEM STATUS -->
+
+    <div
+      class="border-top border-secondary pt-3 mt-auto"
+    >
+
+
+      <div
+        class="d-flex align-items-center gap-2"
+      >
+
+
+        <div
+          class="
+          rounded-circle
+          bg-dark
+          border
+          border-warning
+          text-warning
+          d-flex
+          align-items-center
+          justify-content-center
+          fw-bold
+          "
+          style="
+          width: 34px;
+          height: 34px;
+          font-size: 11px;
+          "
+        >
+
+          AI
+
+        </div>
+
+
+
+        <div
+          class="flex-grow-1"
+        >
+
+
+          <p
+            class="mb-0 text-white small fw-bold"
+          >
+
+            Exploration Engine
+
+          </p>
+
+
+          <small
+            class="text-muted"
+            style="font-size: 10px;"
+            id="backendStatus"
+          >
+
+            Checking backend...
+
+          </small>
+
+
+        </div>
+
+
+      </div>
+
+
+    </div>
+
+
+  </aside>
+
+
+
+  <!-- ====================================== -->
+  <!-- MAIN CONTENT -->
+  <!-- ====================================== -->
+
+  <div class="main-content">
+
+
+    <!-- ================================== -->
+    <!-- NAVBAR -->
+    <!-- ================================== -->
+
+    <header
+      class="
+      d-flex
+      align-items-center
+      justify-content-between
+      p-3
+      border-bottom
+      border-dark
+      px-4
+      "
+      style="
+      background-color:
+      var(--bg-sidebar);
+      "
+    >
+
+
+      <div>
+
+
+        <h6
+          class="mb-0 text-white fw-bold"
+        >
+
+          Industrial Exploration Dashboard
+
+        </h6>
+
+
+        <small
+          class="text-muted"
+        >
+
+          Real-time satellite and geospatial analysis
+
+        </small>
+
+
+      </div>
+
+
+
+      <div
+        class="
+        d-flex
+        align-items-center
+        gap-3
+        "
+      >
+
+
+        <span
+          class="
+          badge
+          bg-success-subtle
+          text-success
+          border
+          border-success
+          "
+          id="systemStatus"
+        >
+
+          <i
+            class="bi bi-broadcast me-1"
+          ></i>
+
+          AI Engine Online
+
+        </span>
+
+
+      </div>
+
+
+    </header>
+
+
+
+    <!-- ================================== -->
+    <!-- PAGE BODY -->
+    <!-- ================================== -->
+
+    <main class="p-4">
+
+
+      <!-- ================================== -->
+      <!-- LOCATION ANALYSIS -->
+      <!-- ================================== -->
+
+      <div
+        class="
+        mine-card
+        mb-4
+        "
+      >
+
+
+        <div
+          class="
+          row
+          align-items-end
+          g-3
+          "
+        >
+
+
+          <div
+            class="col-md-8"
+          >
+
+
+            <label
+              class="
+              form-label
+              text-muted
+              small
+              "
+            >
+
+              Industrial Exploration Location
+
+            </label>
+
+
+            <input
+
+              type="text"
+
+              class="
+              form-control
+              bg-dark
+              text-light
+              border-secondary
+              "
+
+              id="locationInput"
+
+              value="Keonjhar, Odisha"
+
+              placeholder="
+              Enter exploration location
+              "
+
+            >
+
+
+          </div>
+
+
+
+          <div
+            class="col-md-4"
+          >
+
+
+            <button
+
+              id="analyzeButton"
+
+              class="
+              btn
+              btn-warning
+              w-100
+              fw-bold
+              "
+
+            >
+
+
+              <i
+                class="
+                bi
+                bi-cpu
+                me-2
+                "
+              ></i>
+
+
+              Run AI Analysis
+
+
+            </button>
+
+
+          </div>
+
+
+        </div>
+
+
+
+        <!-- ANALYSIS STATUS -->
+
+        <div
+          class="mt-3"
+        >
+
+
+          <small
+            id="analysisStatus"
+            class="text-muted"
+          >
+
+            Enter a location and run
+            real industrial exploration analysis.
+
+          </small>
+
+
+        </div>
+
+
+      </div>
+
+
+
+      <!-- ================================== -->
+      <!-- REAL DATA STATISTICS -->
+      <!-- ================================== -->
+
+      <div
+        class="
+        row
+        g-3
+        mb-4
+        "
+      >
+
+
+        <!-- LOCATION -->
+
+        <div
+          class="
+          col-sm-6
+          col-xl-3
+          "
+        >
+
+
+          <div class="mine-card">
+
+
+            <div
+              class="
+              d-flex
+              justify-content-between
+              text-muted
+              small
+              "
+            >
+
+
+              <span>
+                Analysis Location
+              </span>
+
+
+              <i
+                class="
+                bi
+                bi-geo-alt
+                text-warning
+                fs-5
+                "
+              ></i>
+
+
+            </div>
+
+
+            <h6
+              class="
+              mt-3
+              mb-1
+              text-white
+              fw-bold
+              "
+              id="statLocation"
+            >
+
+              —
+
+            </h6>
+
+
+            <small
+              class="text-muted"
+              id="statCoordinates"
+            >
+
+              Waiting for analysis
+
+            </small>
+
+
+          </div>
+
+
+        </div>
+
+
+
+        <!-- WEATHER -->
+
+        <div
+          class="
+          col-sm-6
+          col-xl-3
+          "
+        >
+
+
+          <div class="mine-card">
+
+
+            <div
+              class="
+              d-flex
+              justify-content-between
+              text-muted
+              small
+              "
+            >
+
+
+              <span>
+                Weather Risk
+              </span>
+
+
+              <i
+                class="
+                bi
+                bi-cloud-sun
+                text-warning
+                fs-5
+                "
+              ></i>
+
+
+            </div>
+
+
+            <h4
+              class="
+              mt-2
+              mb-1
+              fw-bold
+              text-white
+              "
+              id="statWeather"
+            >
+
+              —
+
+            </h4>
+
+
+            <small
+              class="text-muted"
+              id="weatherMessage"
+            >
+
+              Waiting for analysis
+
+            </small>
+
+
+          </div>
+
+
+        </div>
+
+
+
+        <!-- SATELLITE -->
+
+        <div
+          class="
+          col-sm-6
+          col-xl-3
+          "
+        >
+
+
+          <div class="mine-card">
+
+
+            <div
+              class="
+              d-flex
+              justify-content-between
+              text-muted
+              small
+              "
+            >
+
+
+              <span>
+                Sentinel-2 Cloud Cover
+              </span>
+
+
+              <i
+                class="
+                bi
+                bi-satellite
+                text-warning
+                fs-5
+                "
+              ></i>
+
+
+            </div>
+
+
+            <h4
+              class="
+              mt-2
+              mb-1
+              fw-bold
+              text-white
+              "
+              id="statCloud"
+            >
+
+              —
+
+            </h4>
+
+
+            <small
+              class="text-muted"
+              id="satelliteId"
+            >
+
+              Waiting for satellite data
+
+            </small>
+
+
+          </div>
+
+
+        </div>
+
+
+
+        <!-- ZONES -->
+
+        <div
+          class="
+          col-sm-6
+          col-xl-3
+          "
+        >
+
+
+          <div class="mine-card">
+
+
+            <div
+              class="
+              d-flex
+              justify-content-between
+              text-muted
+              small
+              "
+            >
+
+
+              <span>
+                Exploration Zones
+              </span>
+
+
+              <i
+                class="
+                bi
+                bi-crosshair
+                text-warning
+                fs-5
+                "
+              ></i>
+
+
+            </div>
+
+
+            <h4
+              class="
+              mt-2
+              mb-1
+              fw-bold
+              text-white
+              "
+              id="statZones"
+            >
+
+              —
+
+            </h4>
+
+
+            <small
+              class="text-muted"
+            >
+
+              AI-generated analysis grid
+
+            </small>
+
+
+          </div>
+
+
+        </div>
+
+
+      </div>
+
+
+
+      <!-- ================================== -->
+      <!-- PRIORITY SUMMARY -->
+      <!-- ================================== -->
+
+      <div
+        class="
+        row
+        g-4
+        mb-4
+        "
+      >
+
+
+        <!-- PRIORITY DISTRIBUTION -->
+
+        <div
+          class="col-lg-7"
+        >
+
+
+          <div
+            class="
+            mine-card
+            h-100
+            "
+          >
+
+
+            <div
+              class="
+              d-flex
+              justify-content-between
+              align-items-center
+              mb-4
+              "
+            >
+
+
+              <div>
+
+
+                <h6
+                  class="
+                  mb-1
+                  fw-bold
+                  text-white
+                  "
+                >
+
+                  Exploration Priority Distribution
+
+                </h6>
+
+
+                <small
+                  class="text-muted"
+                >
+
+                  AI prospectivity classification
+
+                </small>
+
+
+              </div>
+
+
+
+              <span
+                class="
+                badge
+                bg-warning
+                text-dark
+                fw-bold
+                "
+              >
+
+                Real Analysis
+
+              </span>
+
+
+            </div>
+
+
+
+            <div
+              class="
+              row
+              text-center
+              g-3
+              "
+            >
+
+
+              <!-- HIGH -->
+
+              <div class="col-md-4">
+
+
+                <div
+                  class="
+                  p-3
+                  border
+                  rounded
+                  "
+                >
+
+
+                  <small
+                    class="text-danger"
+                  >
+
+                    HIGH PRIORITY
+
+                  </small>
+
+
+                  <h2
+                    class="
+                    mt-2
+                    fw-bold
+                    text-danger
+                    "
+                    id="highPriority"
+                  >
+
+                    —
+
+                  </h2>
+
+
+                  <small
+                    class="text-muted"
+                  >
+
+                    Zones
+
+                  </small>
+
+
+                </div>
+
+
+              </div>
+
+
+
+              <!-- MODERATE -->
+
+              <div class="col-md-4">
+
+
+                <div
+                  class="
+                  p-3
+                  border
+                  rounded
+                  "
+                >
+
+
+                  <small
+                    class="text-warning"
+                  >
+
+                    MODERATE
+
+                  </small>
+
+
+                  <h2
+                    class="
+                    mt-2
+                    fw-bold
+                    text-warning
+                    "
+                    id="moderatePriority"
+                  >
+
+                    —
+
+                  </h2>
+
+
+                  <small
+                    class="text-muted"
+                  >
+
+                    Zones
+
+                  </small>
+
+
+                </div>
+
+
+              </div>
+
+
+
+              <!-- LOW -->
+
+              <div class="col-md-4">
+
+
+                <div
+                  class="
+                  p-3
+                  border
+                  rounded
+                  "
+                >
+
+
+                  <small
+                    class="text-success"
+                  >
+
+                    LOW PRIORITY
+
+                  </small>
+
+
+                  <h2
+                    class="
+                    mt-2
+                    fw-bold
+                    text-success
+                    "
+                    id="lowPriority"
+                  >
+
+                    —
+
+                  </h2>
+
+
+                  <small
+                    class="text-muted"
+                  >
+
+                    Zones
+
+                  </small>
+
+
+                </div>
+
+
+              </div>
+
+
+            </div>
+
+
+          </div>
+
+
+        </div>
+
+
+
+        <!-- AI INSIGHT -->
+
+        <div
+          class="col-lg-5"
+        >
+
+
+          <div
+            class="
+            mine-card
+            h-100
+            "
+          >
+
+
+            <div
+              class="
+              d-flex
+              align-items-center
+              gap-2
+              text-warning
+              fw-bold
+              small
+              mb-3
+              "
+            >
+
+
+              <i
+                class="
+                bi
+                bi-cpu-fill
+                "
+              ></i>
+
+
+              AI EXPLORATION INSIGHT
+
+
+            </div>
+
+
+
+            <h5
+              class="
+              text-white
+              mb-3
+              "
+              id="insightTitle"
+            >
+
+              Waiting for analysis
+
+            </h5>
+
+
+
+            <p
+              class="
+              text-muted
+              small
+              "
+              id="insightMessage"
+            >
+
+              Run industrial analysis to generate
+              real exploration recommendations
+              based on satellite, terrain and
+              manganese proximity data.
+
+            </p>
+
+
+
+            <div
+              class="
+              border-top
+              border-secondary
+              pt-3
+              mt-3
+              "
+            >
+
+
+              <small
+                class="text-muted"
+              >
+
+                Highest Prospectivity Score
+
+              </small>
+
+
+              <h4
+                class="
+                text-warning
+                fw-bold
+                mb-0
+                "
+                id="highestScore"
+              >
+
+                —
+
+              </h4>
+
+
+            </div>
+
+
+          </div>
+
+
+        </div>
+
+
+      </div>
+
+
+
+      <!-- ================================== -->
+      <!-- TOP EXPLORATION ZONES -->
+      <!-- ================================== -->
+
+      <div
+        class="mine-card"
+      >
+
+
+        <div
+          class="
+          d-flex
+          justify-content-between
+          align-items-center
+          mb-3
+          "
+        >
+
+
+          <div>
+
+
+            <h6
+              class="
+              mb-1
+              fw-bold
+              text-white
+              "
+            >
+
+              Top Exploration Zones
+
+            </h6>
+
+
+            <small
+              class="text-muted"
+            >
+
+              Ranked using real satellite,
+              terrain and manganese proximity
+              analysis.
+
+            </small>
+
+
+          </div>
+
+
+
+          <span
+            class="
+            badge
+            bg-dark
+            border
+            border-secondary
+            text-light
+            "
+            id="zonesCount"
+          >
+
+            No analysis
+
+          </span>
+
+
+        </div>
+
+
+
+        <div
+          class="table-responsive"
+        >
+
+
+          <table
+            class="
+            table
+            table-dark
+            table-hover
+            align-middle
+            mb-0
+            "
+          >
+
+
+            <thead>
+
+
+              <tr>
+
+
+                <th>
+                  Rank
+                </th>
+
+
+                <th>
+                  Zone ID
+                </th>
+
+
+                <th>
+                  Score
+                </th>
+
+
+                <th>
+                  Priority
+                </th>
+
+
+                <th>
+                  Latitude
+                </th>
+
+
+                <th>
+                  Longitude
+                </th>
+
+
+                <th>
+                  Nearest Mn Site
+                </th>
+
+
+                <th>
+                  Distance (KM)
+                </th>
+
+
+              </tr>
+
+
+            </thead>
+
+
+
+            <tbody
+              id="topZonesTable"
+            >
+
+
+              <tr>
+
+
+                <td
+                  colspan="8"
+                  class="
+                  text-center
+                  text-muted
+                  py-4
+                  "
+                >
+
+                  Run an analysis to load
+                  real exploration zones.
+
+                </td>
+
+
+              </tr>
+
+
+            </tbody>
+
+
+          </table>
+
+
+        </div>
+
+
+      </div>
+<!-- ========================================== -->
+<!-- PRODUCTION INTELLIGENCE -->
+<!-- ========================================== -->
+
+<section class="mt-5" id="productionSection">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h2 class="fw-bold">
+                Production Intelligence
+            </h2>
+
+            <p class="text-muted">
+                Historical production analysis, forecasts and operational risk monitoring.
+            </p>
+        </div>
+
+        <button
+            class="btn btn-primary"
+            onclick="loadProductionIntelligence()"
+        >
+            Refresh Production Data
+        </button>
+
+    </div>
+
+
+    <!-- SUMMARY CARDS -->
+
+    <div class="row g-3 mb-4">
+
+        <div class="col-md-3">
+
+            <div class="card shadow-sm">
+
+                <div class="card-body">
+
+                    <small class="text-muted">
+                        2024 Production
+                    </small>
+
+                    <h4 id="production2024">
+                        --
+                    </h4>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-md-3">
+
+            <div class="card shadow-sm">
+
+                <div class="card-body">
+
+                    <small class="text-muted">
+                        2025 Production
+                    </small>
+
+                    <h4 id="production2025">
+                        --
+                    </h4>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-md-3">
+
+            <div class="card shadow-sm">
+
+                <div class="card-body">
+
+                    <small class="text-muted">
+                        2025 Growth
+                    </small>
+
+                    <h4 id="productionGrowth">
+                        --
+                    </h4>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-md-3">
+
+            <div class="card shadow-sm">
+
+                <div class="card-body">
+
+                    <small class="text-muted">
+                        2026 Forecast
+                    </small>
+
+                    <h4 id="forecast2026">
+                        --
+                    </h4>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- FORECAST -->
+
+    <div class="card shadow-sm mb-4">
+
+        <div class="card-header">
+
+            <h5 class="mb-0">
+                2026 Production Forecast
+            </h5>
+
+        </div>
+
+
+        <div class="card-body table-responsive">
+
+            <table class="table table-hover">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Month</th>
+
+                        <th>Forecast (Tonnes)</th>
+
+                        <th>Forecast Method</th>
+
+                        <th>Basis</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="forecastTable">
+
+                    <tr>
+
+                        <td colspan="4"
+                            class="text-center">
+
+                            Loading production forecast...
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <!-- SHORTFALL -->
+
+    <div class="card shadow-sm mb-4">
+
+        <div class="card-header">
+
+            <h5 class="mb-0">
+
+                Target vs Forecast Risk
+
+            </h5>
+
+        </div>
+
+
+        <div class="card-body table-responsive">
+
+            <table class="table table-hover">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Month</th>
+
+                        <th>Forecast</th>
+
+                        <th>Approved Target</th>
+
+                        <th>Shortfall</th>
+
+                        <th>Status</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="shortfallTable">
+
+                    <tr>
+
+                        <td colspan="5"
+                            class="text-center">
+
+                            Loading risk analysis...
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <!-- ALERTS -->
+
+    <div class="card shadow-sm mb-5">
+
+        <div class="card-header">
+
+            <h5 class="mb-0">
+
+                Production Alerts
+
+            </h5>
+
+        </div>
+
+
+        <div
+            class="card-body"
+            id="productionAlerts"
+        >
+
+            Loading alerts...
+
+        </div>
+
+    </div>
+
+</section>
+
+    </main>
+
+
+  </div>
+
+<!-- ====================================== -->
+<!-- JAVASCRIPT -->
+<!-- ====================================== -->
+
+<script src="js/config.js"></script>
+
+<script src="js/api.js"></script>
+
+
+<script>
+
+    console.log(
+        "Dashboard authentication check started"
+    );
+
+
+    const demoAuthenticated =
+
+        localStorage.getItem(
+            "moilAuthenticated"
+        ) === "true";
+
+
+    const realAuthenticated =
+
+        window.MOILAPI.isLoggedIn();
+
+
+    if (
+
+        !demoAuthenticated
+
+        &&
+
+        !realAuthenticated
+
+    ) {
+
+
+        console.log(
+            "No authentication found. Redirecting..."
+        );
+
+
+        window.location.replace(
+            "login.html"
+        );
+
+
+    }
+
+</script>
+
+
+<script src="js/dashboard.js"></script>
+

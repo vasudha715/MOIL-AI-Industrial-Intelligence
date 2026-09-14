@@ -1,0 +1,14 @@
+Month,Forecast (tonnes),Method,Forecast Basis
+2026-01,387441.739,Seasonal Naive,Same calendar month in 2025
+2026-02,387867.24,Seasonal Naive,Same calendar month in 2025
+2026-03,394393.33,Seasonal Naive,Same calendar month in 2025
+2026-04,346337.463,Seasonal Naive,Same calendar month in 2025
+2026-05,356683.295,Seasonal Naive,Same calendar month in 2025
+2026-06,289727.455,Seasonal Naive,Same calendar month in 2025
+2026-07,256980.929,Seasonal Naive,Same calendar month in 2025
+2026-08,263411.264,Seasonal Naive,Same calendar month in 2025
+2026-09,257338.36,Seasonal Naive,Same calendar month in 2025
+2026-10,278101.749,Seasonal Naive,Same calendar month in 2025
+2026-11,310237.789,Seasonal Naive,Same calendar month in 2025
+2026-12,354791.424,Seasonal Naive,Same calendar month in 2025
+2026 Total,,Seasonal Naive,"Expected baseline, not a guarantee"

@@ -1,0 +1,679 @@
+/* ==========================================
+   MOIL AI - INDUSTRIAL PLATFORM
+   GLOBAL DESIGN SYSTEM
+========================================== */
+
+:root {
+
+    --bg-dark: #090d16;
+
+    --bg-card: #111827;
+
+    --bg-sidebar: #030712;
+
+    --border-color: #374151;
+
+    --moil-amber: #f59e0b;
+
+    --moil-amber-hover: #fbbf24;
+
+    --text-main: #ffffff;
+
+    --text-muted: #cbd5e1;
+
+}
+
+
+/* ==========================================
+   GLOBAL
+========================================== */
+
+* {
+
+    box-sizing: border-box;
+
+}
+
+
+html {
+
+    background-color: var(--bg-dark);
+
+}
+
+
+body {
+
+    background-color: var(--bg-dark);
+
+    color: var(--text-main);
+
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Oxygen,
+        Ubuntu,
+        Cantarell,
+        sans-serif;
+
+    margin: 0;
+
+    padding: 0;
+
+    min-height: 100vh;
+
+}
+
+
+/* ==========================================
+   FORCE TEXT VISIBILITY
+========================================== */
+
+body,
+p,
+span,
+div,
+label,
+small,
+td,
+th {
+
+    color: inherit;
+
+}
+
+
+.text-white {
+
+    color: #ffffff !important;
+
+}
+
+
+.text-light {
+
+    color: #f8fafc !important;
+
+}
+
+
+/* IMPORTANT:
+   Override Bootstrap muted text
+*/
+
+.text-muted {
+
+    color: #cbd5e1 !important;
+
+}
+
+
+/* ==========================================
+   HEADINGS
+========================================== */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+
+    color: #ffffff;
+
+}
+
+
+/* ==========================================
+   SIDEBAR
+========================================== */
+
+.sidebar {
+
+    width: 260px;
+
+    background-color: var(--bg-sidebar);
+
+    border-right:
+        1px solid var(--border-color);
+
+    height: 100vh;
+
+    position: fixed;
+
+    top: 0;
+
+    left: 0;
+
+    z-index: 1000;
+
+    display: flex;
+
+    flex-direction: column;
+
+    overflow-y: auto;
+
+}
+
+
+/* ==========================================
+   MAIN CONTENT
+========================================== */
+
+.main-content {
+
+    margin-left: 260px;
+
+    min-height: 100vh;
+
+    display: flex;
+
+    flex-direction: column;
+
+    background-color: var(--bg-dark);
+
+}
+
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media (max-width: 992px) {
+
+    .sidebar {
+
+        margin-left: -260px;
+
+        transition:
+            margin 0.3s ease;
+
+    }
+
+
+    .sidebar.show {
+
+        margin-left: 0;
+
+    }
+
+
+    .main-content {
+
+        margin-left: 0;
+
+    }
+
+}
+
+
+/* ==========================================
+   CARDS
+========================================== */
+
+.mine-card {
+
+    background-color: var(--bg-card);
+
+    border:
+        1px solid var(--border-color);
+
+    border-radius: 12px;
+
+    padding: 20px;
+
+    color: var(--text-main);
+
+    box-shadow:
+
+        0 4px 20px
+        rgba(0, 0, 0, 0.15);
+
+}
+
+
+/* ==========================================
+   NAVIGATION
+========================================== */
+
+.nav-link-custom {
+
+    color: #d1d5db !important;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 10px 16px;
+
+    border-radius: 8px;
+
+    text-decoration: none;
+
+    font-size: 0.875rem;
+
+    font-weight: 500;
+
+    transition:
+        all 0.2s ease;
+
+}
+
+
+.nav-link-custom:hover {
+
+    background-color:
+        rgba(245, 158, 11, 0.10);
+
+    color:
+        var(--moil-amber) !important;
+
+}
+
+
+.nav-link-custom.active {
+
+    background-color:
+        rgba(245, 158, 11, 0.15);
+
+    color:
+        var(--moil-amber) !important;
+
+    border:
+        1px solid
+        rgba(245, 158, 11, 0.35);
+
+}
+
+
+/* ==========================================
+   FORM INPUTS
+========================================== */
+
+.form-control {
+
+    background-color:
+        #0f172a !important;
+
+    color:
+        #ffffff !important;
+
+    border-color:
+        #475569 !important;
+
+}
+
+
+.form-control::placeholder {
+
+    color:
+        #94a3b8 !important;
+
+}
+
+
+.form-control:focus {
+
+    background-color:
+        #0f172a !important;
+
+    color:
+        #ffffff !important;
+
+    border-color:
+        var(--moil-amber) !important;
+
+    box-shadow:
+
+        0 0 0 0.2rem
+        rgba(245, 158, 11, 0.15);
+
+}
+
+
+/* ==========================================
+   TABLES
+========================================== */
+
+.table-dark {
+
+    --bs-table-bg:
+        #111827;
+
+    --bs-table-color:
+        #f8fafc;
+
+    --bs-table-border-color:
+        #374151;
+
+}
+
+
+.table-dark th {
+
+    color:
+        #fbbf24 !important;
+
+    font-weight:
+        600;
+
+}
+
+
+.table-dark td {
+
+    color:
+        #e5e7eb !important;
+
+}
+
+
+.table-hover tbody tr:hover {
+
+    background-color:
+        rgba(245, 158, 11, 0.08);
+
+}
+
+
+/* ==========================================
+   BUTTONS
+========================================== */
+
+.btn-warning {
+
+    background-color:
+        var(--moil-amber);
+
+    border-color:
+        var(--moil-amber);
+
+    color:
+        #111827;
+
+}
+
+
+.btn-warning:hover {
+
+    background-color:
+        var(--moil-amber-hover);
+
+    border-color:
+        var(--moil-amber-hover);
+
+    color:
+        #000000;
+
+}
+
+
+/* ==========================================
+   BADGES
+========================================== */
+
+.badge-risk-high {
+
+    background-color:
+        rgba(239, 68, 68, 0.20);
+
+    color:
+        #fca5a5 !important;
+
+    border:
+        1px solid #ef4444;
+
+}
+
+
+.badge-risk-med {
+
+    background-color:
+        rgba(245, 158, 11, 0.20);
+
+    color:
+        #fcd34d !important;
+
+    border:
+        1px solid #f59e0b;
+
+}
+
+
+.badge-risk-low {
+
+    background-color:
+        rgba(16, 185, 129, 0.20);
+
+    color:
+        #6ee7b7 !important;
+
+    border:
+        1px solid #10b981;
+
+}
+
+
+/* ==========================================
+   STATUS ELEMENTS
+========================================== */
+
+#backendStatus {
+
+    color:
+        #cbd5e1 !important;
+
+}
+
+
+#analysisStatus {
+
+    color:
+        #cbd5e1;
+
+}
+
+
+/* ==========================================
+   LINKS
+========================================== */
+
+a {
+
+    color:
+        inherit;
+
+}
+
+
+a:hover {
+
+    color:
+        var(--moil-amber);
+
+}
+/* ==========================================
+   INDUSTRIAL DASHBOARD READABILITY FIX
+========================================== */
+
+/* Normal text */
+body {
+    color: #212529;
+}
+
+/* Muted text - darker and readable */
+.text-muted {
+    color: #495057 !important;
+}
+
+/* Small labels */
+small {
+    color: #343a40;
+}
+
+/* Cards */
+.card {
+    color: #212529;
+}
+
+/* Table text */
+.table {
+    color: #212529;
+}
+
+/* Table headers */
+.table thead th {
+    color: #212529;
+    font-weight: 700;
+}
+
+/* Production cards */
+.card-body {
+    color: #212529;
+}
+/* ==========================================
+   SAFE READABILITY FIX
+========================================== */
+
+/* Light status text */
+#backendStatus,
+#analysisStatus {
+    color: #64748b !important;
+    font-weight: 600;
+}
+
+/* Bootstrap muted text */
+.text-muted {
+    color: #6b7280 !important;
+}
+
+/* Light text inside white cards */
+.card .text-muted,
+.card small.text-muted {
+    color: #6b7280 !important;
+}
+
+/* Production section */
+#productionSection .card {
+    color: #212529;
+}
+/* ==========================================
+   PRODUCTION CARD HEADINGS - DARK TEXT
+========================================== */
+
+.card-header h5 {
+    color: #212529 !important;
+    font-weight: 700 !important;
+}
+
+#productionSection .card-body,
+#productionSection .card-header,
+#productionSection .table,
+#productionSection .table td,
+#productionSection .table th {
+    color: #212529 !important;
+}
+/* ==========================================
+   PRODUCTION ANALYTICS
+========================================== */
+
+.chart-container {
+    position: relative;
+    height: 350px;
+}
+
+
+.model-info {
+    margin-top: 20px;
+}
+
+
+.model-item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 18px;
+}
+
+
+.model-item span {
+    color: #6c757d;
+    font-size: 14px;
+}
+
+
+.model-item strong {
+    font-size: 16px;
+}
+
+
+.insight-number {
+    text-align: center;
+    padding: 30px 10px;
+}
+
+
+.insight-number span {
+    font-size: 18px;
+    color: #6c757d;
+}
+
+
+.insight-number h2 {
+    margin-top: 15px;
+    font-weight: 700;
+}
+
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+
+.user-info i {
+    font-size: 24px;
+}
+/* ==========================================
+   AI RECOMMENDATIONS
+========================================== */
+
+.recommendation-card {
+    border: none;
+    border-radius: 12px;
+    transition: transform 0.2s ease;
+}
+
+
+.recommendation-card:hover {
+    transform: translateY(-4px);
+}
+
+
+.recommendation-category {
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+
+.recommendation-weather {
+    margin-top: 15px;
+    margin-bottom: 15px;
+    padding: 12px;
+    border-radius: 8px;
+    background: #f8f9fa;
+}
+
+
+.recommendation-action {
+    margin-top: 20px;
+    padding: 15px;
+    border-left: 4px solid #198754;
+    background: #f8f9fa;
+    border-radius: 6px;
+}

@@ -1,0 +1,1118 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+
+<head>
+
+
+<meta charset="UTF-8">
+
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+
+<title>
+MOIL AI — Industrial Exploration GIS
+</title>
+
+
+<link
+href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+rel="stylesheet">
+
+
+<link
+rel="stylesheet"
+href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+
+<link
+rel="stylesheet"
+href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+
+
+<link
+rel="stylesheet"
+href="css/style.css">
+
+
+<style>
+
+
+#mapCanvas {
+
+    height: 72vh;
+
+    width: 100%;
+
+    border-radius: 10px;
+
+    border:
+
+        1px solid
+
+        var(--border-color);
+
+}
+
+
+.analysis-input {
+
+    background-color:
+
+        #030712;
+
+    color:
+
+        white;
+
+    border:
+
+        1px solid #374151;
+
+}
+
+
+.analysis-input:focus {
+
+    background-color:
+
+        #030712;
+
+    color:
+
+        white;
+
+    border-color:
+
+        #f59e0b;
+
+    box-shadow:
+
+        0 0 0
+
+        0.2rem
+
+        rgba(
+
+            245,
+
+            158,
+
+            11,
+
+            0.15
+
+        );
+
+}
+
+
+</style>
+
+
+</head>
+
+
+<body>
+
+
+<!-- ===================================== -->
+<!-- SIDEBAR -->
+<!-- ===================================== -->
+
+<aside
+
+class="sidebar p-3"
+
+
+>
+
+
+<div
+
+class="d-flex align-items-center gap-2 mb-4 px-2"
+
+>
+
+
+<i
+
+class="bi bi-cpu text-warning fs-4"
+
+></i>
+
+
+<div>
+
+
+<h6
+
+class="mb-0 fw-bold text-white"
+
+>
+
+MOIL AI
+
+</h6>
+
+
+<span
+
+class="text-warning fw-semibold"
+
+style="font-size: 10px;"
+
+>
+
+INDUSTRIAL EXPLORATION
+
+</span>
+
+
+</div>
+
+
+</div>
+
+
+
+<nav
+
+class="nav flex-column gap-1 flex-grow-1"
+
+>
+
+
+<a
+
+href="dashboard.html"
+
+class="nav-link-custom"
+
+>
+
+<i
+
+class="bi bi-speedometer2"
+
+></i>
+
+Dashboard
+
+</a>
+
+
+
+<a
+
+href="exploration.html"
+
+class="nav-link-custom active"
+
+>
+
+<i
+
+class="bi bi-compass"
+
+></i>
+
+Exploration GIS
+
+</a>
+
+
+
+<a
+
+href="production.html"
+
+class="nav-link-custom"
+
+>
+
+<i
+
+class="bi bi-graph-up-arrow"
+
+></i>
+
+Production Forecast
+
+</a>
+
+
+</nav>
+
+
+
+<!-- ===================================== -->
+<!-- ACTIVE SYSTEM -->
+<!-- ===================================== -->
+
+<div
+
+class="border-top border-secondary pt-3 mt-auto"
+
+>
+
+
+<div
+
+class="small text-muted"
+
+>
+
+SYSTEM STATUS
+
+</div>
+
+
+<div
+
+id="backendStatus"
+
+class="text-warning small fw-bold"
+
+>
+
+Checking Backend...
+
+</div>
+
+
+</div>
+
+
+</aside>
+
+
+
+<!-- ===================================== -->
+<!-- MAIN CONTENT -->
+<!-- ===================================== -->
+
+<div
+
+class="main-content"
+
+>
+
+
+<!-- ===================================== -->
+<!-- HEADER -->
+<!-- ===================================== -->
+
+<header
+
+class="d-flex align-items-center justify-content-between p-3 border-bottom border-dark px-4"
+
+style="background-color: var(--bg-sidebar);"
+
+>
+
+
+<div>
+
+
+<h5
+
+class="text-white mb-1 fw-bold"
+
+>
+
+MOIL AI
+
+Industrial Exploration System
+
+</h5>
+
+
+<small
+
+class="text-muted"
+
+>
+
+Real Sentinel-2,
+
+Terrain,
+
+Elevation
+
+and Manganese Prospectivity Analysis
+
+</small>
+
+
+</div>
+
+
+
+<button
+
+class="btn btn-sm btn-outline-warning"
+
+onclick="resetMapView()"
+
+>
+
+
+<i
+
+class="bi bi-arrows-fullscreen"
+
+></i>
+
+Reset View
+
+
+</button>
+
+
+</header>
+
+
+
+<!-- ===================================== -->
+<!-- MAIN -->
+<!-- ===================================== -->
+
+<main
+
+class="p-4"
+
+>
+
+
+<!-- ===================================== -->
+<!-- LOCATION ANALYSIS PANEL -->
+<!-- ===================================== -->
+
+<div
+
+class="mine-card mb-4"
+
+>
+
+
+<div
+
+class="row g-3 align-items-end"
+
+>
+
+
+<div
+
+class="col-lg-6"
+
+>
+
+
+<label
+
+class="text-muted small mb-2"
+
+>
+
+LOCATION
+
+</label>
+
+
+<input
+
+type="text"
+
+id="locationInput"
+
+class="form-control analysis-input"
+
+value="Keonjhar, Odisha"
+
+placeholder="Enter industrial exploration location"
+
+
+>
+
+
+</div>
+
+
+
+<div
+
+class="col-lg-2"
+
+>
+
+
+<label
+
+class="text-muted small mb-2"
+
+>
+
+GRID
+
+</label>
+
+
+<select
+
+id="gridSize"
+
+class="form-select analysis-input"
+
+>
+
+
+<option
+
+value="10"
+
+>
+
+10 × 10
+
+</option>
+
+
+<option
+
+value="15"
+
+>
+
+15 × 15
+
+</option>
+
+
+<option
+
+value="20"
+
+>
+
+20 × 20
+
+</option>
+
+
+</select>
+
+
+</div>
+
+
+
+<div
+
+class="col-lg-2"
+
+>
+
+
+<label
+
+class="text-muted small mb-2"
+
+>
+
+AREA BUFFER
+
+</label>
+
+
+<select
+
+id="bufferSize"
+
+class="form-select analysis-input"
+
+>
+
+
+<option
+
+value="0.01"
+
+>
+
+0.01°
+
+</option>
+
+
+<option
+
+value="0.02"
+
+>
+
+0.02°
+
+</option>
+
+
+<option
+
+value="0.03"
+
+>
+
+0.03°
+
+</option>
+
+
+</select>
+
+
+</div>
+
+
+
+<div
+
+class="col-lg-2"
+
+
+>
+
+
+<button
+
+id="analyzeButton"
+
+class="btn btn-warning w-100 fw-bold"
+
+onclick="runRealAnalysis()"
+
+>
+
+
+<i
+
+class="bi bi-cpu"
+
+></i>
+
+Analyze
+
+
+</button>
+
+
+</div>
+
+
+</div>
+
+
+
+<!-- STATUS -->
+
+<div
+
+class="mt-3 small"
+
+id="analysisStatus"
+
+>
+
+
+<span
+
+class="text-muted"
+
+>
+
+Ready for industrial analysis.
+
+</span>
+
+
+</div>
+
+
+</div>
+
+
+
+<!-- ===================================== -->
+<!-- STATISTICS -->
+<!-- ===================================== -->
+
+<div
+
+class="row g-3 mb-4"
+
+>
+
+
+<div
+
+class="col-md-3"
+
+>
+
+
+<div
+
+class="mine-card"
+
+>
+
+
+<div
+
+class="text-muted small"
+
+>
+
+LOCATION
+
+</div>
+
+
+<div
+
+id="locationResult"
+
+class="text-white fw-bold mt-2"
+
+>
+
+Not Analyzed
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+<div
+
+class="col-md-3"
+
+>
+
+
+<div
+
+class="mine-card"
+
+>
+
+
+<div
+
+class="text-muted small"
+
+>
+
+TOTAL ZONES
+
+</div>
+
+
+<h4
+
+id="totalZones"
+
+class="text-warning mt-2"
+
+>
+
+0
+
+</h4>
+
+
+</div>
+
+
+</div>
+
+
+
+<div
+
+class="col-md-3"
+
+>
+
+
+<div
+
+class="mine-card"
+
+>
+
+
+<div
+
+class="text-muted small"
+
+>
+
+HIGH PRIORITY
+
+</div>
+
+
+<h4
+
+id="highPriority"
+
+class="text-danger mt-2"
+
+>
+
+0
+
+</h4>
+
+
+</div>
+
+
+</div>
+
+
+
+<div
+
+class="col-md-3"
+
+>
+
+
+<div
+
+class="mine-card"
+
+>
+
+
+<div
+
+class="text-muted small"
+
+>
+
+WEATHER RISK
+
+</div>
+
+
+<h4
+
+id="weatherRisk"
+
+class="text-success mt-2"
+
+>
+
+-
+
+</h4>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+<!-- ===================================== -->
+<!-- MAP -->
+<!-- ===================================== -->
+
+<div
+
+class="row g-3"
+
+>
+
+
+<div
+
+class="col-lg-9"
+
+>
+
+
+<div
+
+id="mapCanvas"
+
+></div>
+
+
+</div>
+
+
+
+<!-- ===================================== -->
+<!-- SIDE PANEL -->
+<!-- ===================================== -->
+
+<div
+
+class="col-lg-3"
+
+>
+
+
+<div
+
+class="mine-card h-100"
+
+>
+
+
+<h6
+
+class="text-white fw-bold mb-3"
+
+>
+
+
+<i
+
+class="bi bi-layers text-warning me-1"
+
+></i>
+
+Real Data Layers
+
+
+</h6>
+
+
+
+<div
+
+class="form-check mb-3"
+
+>
+
+
+<input
+
+class="form-check-input"
+
+type="checkbox"
+
+id="layerZones"
+
+checked
+
+>
+
+
+<label
+
+class="form-check-label text-light small"
+
+for="layerZones"
+
+>
+
+Real Exploration Zones
+
+</label>
+
+
+</div>
+
+
+
+<div
+
+class="form-check mb-3"
+
+>
+
+
+<input
+
+class="form-check-input"
+
+type="checkbox"
+
+id="layerTopZones"
+
+checked
+
+>
+
+
+<label
+
+class="form-check-label text-light small"
+
+for="layerTopZones"
+
+>
+
+Top Priority Zones
+
+</label>
+
+
+</div>
+
+
+
+<hr
+
+class="border-secondary"
+
+
+>
+
+
+<h6
+
+class="text-white fw-bold mb-2"
+
+>
+
+Selected Zone
+
+</h6>
+
+
+
+<div
+
+id="featureDetails"
+
+class="text-muted small"
+
+>
+
+
+Run a real analysis
+
+and click an exploration zone
+
+to view:
+
+prospectivity score,
+
+terrain,
+
+elevation
+
+and manganese proximity.
+
+
+</div>
+
+
+
+<hr
+
+class="border-secondary mt-4"
+
+
+>
+
+
+<h6
+
+class="text-white fw-bold mb-2"
+
+>
+
+Satellite Data
+
+</h6>
+
+
+
+<div
+
+id="satelliteDetails"
+
+class="text-muted small"
+
+>
+
+
+No satellite analysis yet.
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</main>
+
+
+</div>
+
+
+
+<!-- ===================================== -->
+<!-- JAVASCRIPT -->
+<!-- ===================================== -->
+
+<script
+
+src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+
+></script>
+
+
+<script
+
+src="js/api.js"
+
+></script>
+
+
+<script
+
+src="js/map.js"
+
+></script>
+
+<script src="js/config.js"></script>
+
+<script src="js/api.js"></script>
+
+<script src="js/map.js"></script>
+
+<script src="js/exploration.js"></script>
+
+</body>
+
+
+</html>

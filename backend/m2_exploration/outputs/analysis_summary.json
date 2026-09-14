@@ -1,0 +1,22 @@
+{
+    "location": {
+        "name": "Keonjhar, Kendujhar, Odisha, 758018, India",
+        "latitude": 21.5,
+        "longitude": 85.5
+    },
+    "satellite": {
+        "image_id": "S2B_MSIL2A_20250121T045019_R076_T45QUD_20250121T084038",
+        "cloud_cover": 9e-05
+    },
+    "weather_risk": {
+        "risk": "LOW",
+        "score": 20,
+        "message": "Current weather conditions are generally suitable for field work."
+    },
+    "total_zones": 100,
+    "priority_summary": {
+        "LOW": 50,
+        "MODERATE": 30,
+        "HIGH": 20
+    }
+}

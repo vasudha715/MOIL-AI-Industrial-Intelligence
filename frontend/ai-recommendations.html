@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>AI Recommendations | MOIL AI</title>
+
+
+    <!-- Bootstrap -->
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet">
+
+
+    <!-- Bootstrap Icons -->
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+        rel="stylesheet">
+
+
+    <!-- Project CSS -->
+
+    <link
+        rel="stylesheet"
+        href="css/style.css">
+
+</head>
+
+
+<body>
+
+
+<!-- ================================================= -->
+<!-- SIDEBAR -->
+<!-- ================================================= -->
+
+<div class="sidebar">
+
+
+    <div class="sidebar-brand">
+
+        <i class="bi bi-hexagon-fill"></i>
+
+        <span>MOIL AI</span>
+
+    </div>
+
+
+    <div class="sidebar-subtitle">
+
+        Industrial Intelligence Platform
+
+    </div>
+
+
+
+    <!-- NAVIGATION -->
+
+    <nav class="sidebar-nav">
+
+
+        <a
+            href="dashboard.html"
+            class="nav-link-custom">
+
+            <i class="bi bi-grid"></i>
+
+            Dashboard
+
+        </a>
+
+
+
+        <a
+            href="exploration.html"
+            class="nav-link-custom">
+
+            <i class="bi bi-compass"></i>
+
+            Exploration GIS
+
+        </a>
+
+
+
+        <a
+            href="production.html"
+            class="nav-link-custom">
+
+            <i class="bi bi-graph-up-arrow"></i>
+
+            Production Forecast
+
+        </a>
+
+
+
+        <a
+            href="ai-recommendations.html"
+            class="nav-link-custom active">
+
+            <i class="bi bi-cpu"></i>
+
+            AI Recommendations
+
+        </a>
+
+
+    </nav>
+
+
+
+    <!-- SIDEBAR BOTTOM -->
+
+    <div class="sidebar-bottom">
+
+
+        <button
+            id="logoutBtn"
+            class="btn btn-outline-light w-100">
+
+            <i class="bi bi-box-arrow-right"></i>
+
+            Logout
+
+        </button>
+
+
+    </div>
+
+
+</div>
+
+
+
+<!-- ================================================= -->
+<!-- MAIN CONTENT -->
+<!-- ================================================= -->
+
+<div class="main-content">
+
+
+
+    <!-- HEADER -->
+
+    <div class="page-header">
+
+
+        <div>
+
+            <h2>
+
+                <i class="bi bi-cpu"></i>
+
+                AI Recommendations
+
+            </h2>
+
+
+            <p>
+
+                Prioritized intelligence combining
+                exploration, production and operational risk.
+
+            </p>
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- ================================================= -->
+    <!-- EXPLORATION INPUT -->
+    <!-- ================================================= -->
+
+    <div class="card mb-4">
+
+
+        <div class="card-body">
+
+
+            <h5 class="mb-3">
+
+                <i class="bi bi-geo-alt"></i>
+
+                Analyze Exploration Area
+
+            </h5>
+
+
+            <p class="text-muted">
+
+                Enter a location to combine live exploration
+                analysis with production intelligence.
+
+                Leave it empty to view production-based
+                recommendations only.
+
+            </p>
+
+
+
+            <div class="row g-3">
+
+
+                <div class="col-md-8">
+
+
+                    <input
+
+                        type="text"
+
+                        id="locationInput"
+
+                        class="form-control"
+
+                        placeholder="Example: Keonjhar, Odisha"
+
+                    >
+
+
+                </div>
+
+
+
+                <div class="col-md-4">
+
+
+                    <button
+
+                        id="generateBtn"
+
+                        class="btn btn-primary w-100">
+
+                        <i class="bi bi-stars"></i>
+
+                        Generate Recommendations
+
+                    </button>
+
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- ================================================= -->
+    <!-- STATUS -->
+    <!-- ================================================= -->
+
+    <div
+        id="statusBox"
+        class="alert d-none">
+
+    </div>
+
+
+
+    <!-- ================================================= -->
+    <!-- LOADING -->
+    <!-- ================================================= -->
+
+    <div
+        id="loadingBox"
+        class="text-center py-5 d-none">
+
+
+        <div
+            class="spinner-border"
+            role="status">
+
+        </div>
+
+
+        <p class="mt-3">
+
+            AI engine is analyzing available intelligence...
+
+        </p>
+
+
+    </div>
+
+
+
+    <!-- ================================================= -->
+    <!-- RECOMMENDATIONS -->
+    <!-- ================================================= -->
+
+    <div
+        id="recommendationsContainer"
+        class="row g-4">
+
+
+        <!-- AI recommendation cards appear here -->
+
+
+    </div>
+
+
+
+</div>
+
+
+
+<!-- ================================================= -->
+<!-- PROJECT JAVASCRIPT -->
+<!-- ================================================= -->
+
+
+<script src="js/config.js"></script>
+
+
+<script src="js/api.js"></script>
+
+
+<script>
+
+
+// =================================================
+// AUTHENTICATION CHECK
+// =================================================
+
+MOILAPI.requireAuth();
+
+
+// =================================================
+// ELEMENTS
+// =================================================
+
+const generateBtn =
+    document.getElementById("generateBtn");
+
+
+const locationInput =
+    document.getElementById("locationInput");
+
+
+const recommendationsContainer =
+    document.getElementById(
+        "recommendationsContainer"
+    );
+
+
+const loadingBox =
+    document.getElementById(
+        "loadingBox"
+    );
+
+
+const statusBox =
+    document.getElementById(
+        "statusBox"
+    );
+
+
+const logoutBtn =
+    document.getElementById(
+        "logoutBtn"
+    );
+
+
+
+// =================================================
+// LOGOUT
+// =================================================
+
+logoutBtn.addEventListener(
+
+    "click",
+
+    function () {
+
+        MOILAPI.logout();
+
+    }
+
+);
+
+
+
+// =================================================
+// GENERATE RECOMMENDATIONS
+// =================================================
+
+generateBtn.addEventListener(
+
+    "click",
+
+    generateRecommendations
+
+);
+
+
+
+// =================================================
+// ENTER KEY
+// =================================================
+
+locationInput.addEventListener(
+
+    "keydown",
+
+    function (event) {
+
+        if (event.key === "Enter") {
+
+            generateRecommendations();
+
+        }
+
+    }
+
+);
+
+
+
+// =================================================
+// MAIN FUNCTION
+// =================================================
+
+async function generateRecommendations() {
+
+
+    const location =
+        locationInput.value.trim();
+
+
+    // ---------------------------------------------
+    // RESET UI
+    // ---------------------------------------------
+
+    recommendationsContainer.innerHTML =
+        "";
+
+
+    statusBox.className =
+        "alert d-none";
+
+
+    loadingBox.classList.remove(
+        "d-none"
+    );
+
+
+    generateBtn.disabled = true;
+
+
+    // ---------------------------------------------
+    // API REQUEST
+    // ---------------------------------------------
+
+    try {
+
+
+        const result =
+            await MOILAPI.getRecommendations(
+
+                location || null
+
+            );
+
+
+        loadingBox.classList.add(
+            "d-none"
+        );
+
+
+        generateBtn.disabled =
+            false;
+
+
+        // -----------------------------------------
+        // SUCCESS
+        // -----------------------------------------
+
+        if (
+            result.status !== "success"
+        ) {
+
+            throw new Error(
+
+                "AI recommendation request failed."
+
+            );
+
+        }
+
+
+        displayRecommendations(
+
+            result.recommendations
+
+        );
+
+
+        // -----------------------------------------
+        // STATUS MESSAGE
+        // -----------------------------------------
+
+        statusBox.className =
+            "alert alert-success";
+
+
+        if (result.location_analyzed) {
+
+
+            statusBox.innerHTML =
+
+                `<i class="bi bi-check-circle"></i>
+
+                Recommendations generated successfully.
+
+                Location analyzed:
+
+                <strong>
+
+                ${escapeHtml(
+                    result.location_analyzed
+                )}
+
+                </strong>`;
+
+        }
+
+        else {
+
+
+            statusBox.innerHTML =
+
+                `<i class="bi bi-info-circle"></i>
+
+                Production and risk recommendations
+                generated successfully.`;
+
+        }
+
+
+    }
+
+
+    // ---------------------------------------------
+    // ERROR
+    // ---------------------------------------------
+
+    catch (error) {
+
+
+        loadingBox.classList.add(
+            "d-none"
+        );
+
+
+        generateBtn.disabled =
+            false;
+
+
+        statusBox.className =
+            "alert alert-danger";
+
+
+        statusBox.innerHTML =
+
+            `<i class="bi bi-exclamation-triangle"></i>
+
+            <strong>Error:</strong>
+
+            ${escapeHtml(error.message)}`;
+
+
+        console.error(
+
+            error
+
+        );
+
+    }
+
+
+}
+
+
+
+// =================================================
+// DISPLAY RECOMMENDATIONS
+// =================================================
+
+function displayRecommendations(
+
+    recommendations
+
+) {
+
+
+    recommendationsContainer.innerHTML =
+        "";
+
+
+    // ---------------------------------------------
+    // EMPTY STATE
+    // ---------------------------------------------
+
+    if (
+
+        !recommendations ||
+
+        recommendations.length === 0
+
+    ) {
+
+
+        recommendationsContainer.innerHTML =
+
+            `
+
+            <div class="col-12">
+
+
+                <div class="alert alert-info">
+
+
+                    No recommendations available.
+
+                </div>
+
+
+            </div>
+
+            `;
+
+
+        return;
+
+    }
+
+
+
+    // ---------------------------------------------
+    // CREATE CARDS
+    // ---------------------------------------------
+
+    recommendations.forEach(
+
+        function (recommendation) {
+
+
+            const priority =
+                recommendation.priority ||
+                "low";
+
+
+            const priorityClass =
+                getPriorityClass(
+                    priority
+                );
+
+
+            const icon =
+                getCategoryIcon(
+                    recommendation.category
+                );
+
+
+            const weatherSection =
+
+                recommendation.weather_note
+
+                    ?
+
+                    `
+
+                    <div class="recommendation-weather">
+
+                        <i class="bi bi-cloud-sun"></i>
+
+                        ${escapeHtml(
+                            recommendation.weather_note
+                        )}
+
+                    </div>
+
+                    `
+
+                    :
+
+                    "";
+
+
+            const card =
+
+                `
+
+                <div class="col-lg-6">
+
+
+                    <div class="card recommendation-card h-100">
+
+
+                        <div class="card-body">
+
+
+                            <!-- HEADER -->
+
+                            <div
+                                class="d-flex
+                                justify-content-between
+                                align-items-start
+                                mb-3">
+
+
+                                <div>
+
+
+                                    <span
+                                        class="recommendation-category">
+
+
+                                        <i
+                                            class="bi ${icon}">
+
+                                        </i>
+
+
+                                        ${escapeHtml(
+                                            recommendation.category ||
+                                            "General"
+                                        )}
+
+
+                                    </span>
+
+
+                                </div>
+
+
+
+                                <span
+                                    class="badge
+                                    ${priorityClass}">
+
+
+                                    ${escapeHtml(
+                                        priority.toUpperCase()
+                                    )}
+
+
+                                </span>
+
+
+                            </div>
+
+
+
+                            <!-- TITLE -->
+
+                            <h5>
+
+                                ${escapeHtml(
+                                    recommendation.title
+                                )}
+
+                            </h5>
+
+
+
+                            <!-- REASON -->
+
+                            <p
+                                class="text-muted">
+
+
+                                ${escapeHtml(
+                                    recommendation.reason
+                                )}
+
+
+                            </p>
+
+
+
+                            <!-- WEATHER -->
+
+                            ${weatherSection}
+
+
+
+                            <!-- NEXT STEP -->
+
+                            <div
+                                class="recommendation-action">
+
+
+                                <strong>
+
+                                    <i
+                                        class="bi
+                                        bi-arrow-right-circle">
+
+                                    </i>
+
+                                    Recommended Action:
+
+                                </strong>
+
+
+                                <p class="mb-0 mt-2">
+
+
+                                    ${escapeHtml(
+
+                                        recommendation
+                                        .recommended_next_step
+
+                                        ||
+
+                                        "Review the available intelligence."
+
+                                    )}
+
+
+                                </p>
+
+
+                            </div>
+
+
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+
+                `;
+
+
+            recommendationsContainer
+                .insertAdjacentHTML(
+
+                    "beforeend",
+
+                    card
+
+                );
+
+
+        }
+
+    );
+
+
+}
+
+
+
+// =================================================
+// PRIORITY COLOR
+// =================================================
+
+function getPriorityClass(
+
+    priority
+
+) {
+
+
+    if (priority === "high") {
+
+
+        return "text-bg-danger";
+
+    }
+
+
+    if (priority === "medium") {
+
+
+        return "text-bg-warning";
+
+    }
+
+
+    return "text-bg-success";
+
+
+}
+
+
+
+// =================================================
+// CATEGORY ICON
+// =================================================
+
+function getCategoryIcon(
+
+    category
+
+) {
+
+
+    if (category === "Exploration") {
+
+
+        return "bi-compass";
+
+
+    }
+
+
+    if (category === "Production") {
+
+
+        return "bi-graph-up-arrow";
+
+
+    }
+
+
+    if (category === "Risk") {
+
+
+        return "bi-exclamation-triangle";
+
+
+    }
+
+
+    return "bi-lightbulb";
+
+
+}
+
+
+
+// =================================================
+// SAFE HTML
+// =================================================
+
+function escapeHtml(
+
+    value
+
+) {
+
+
+    if (value === null) {
+
+
+        return "";
+
+    }
+
+
+    const div =
+        document.createElement(
+            "div"
+        );
+
+
+    div.textContent =
+        String(value);
+
+
+    return div.innerHTML;
+
+
+}
+
+
+
+// =================================================
+// AUTO LOAD
+// =================================================
+
+// Automatically show production and risk
+// recommendations when the page opens.
+
+generateRecommendations();
+
+
+</script>
+
+
+</body>
+
+</html>

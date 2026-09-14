@@ -1,0 +1,17 @@
+fastapi
+uvicorn[standard]
+sqlalchemy
+passlib[bcrypt]
+python-jose[cryptography]
+pydantic[email]
+python-multipart
+
+# --- your existing M2 exploration engine dependencies ---
+pandas
+numpy
+requests
+geopy
+planetary-computer
+pystac-client
+rasterio
+scikit-learn
