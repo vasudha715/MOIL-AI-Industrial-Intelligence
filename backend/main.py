@@ -24,20 +24,11 @@ app = FastAPI(
 # ==========================================
 
 origins = [
-
-    # Local development
-
     "http://127.0.0.1:5500",
     "http://localhost:5500",
-
     "http://127.0.0.1:5501",
     "http://localhost:5501",
-
-
-    # Deployed Render frontend
-
-    "https://moil-ai-industrial-intelligence-1.onrender.com",
-
+    "https://moil-ai-industrial-intelligence-01.onrender.com",
 ]
 
 
