@@ -1,5 +1,4 @@
 import requests
-import time
 
 
 def get_weather(latitude, longitude):
@@ -28,56 +27,84 @@ def get_weather(latitude, longitude):
         "timezone": "auto"
     }
 
-    # Try live weather API
-    for attempt in range(3):
+    # ==========================================
+    # TRY LIVE WEATHER API
+    # ==========================================
 
-        try:
+    try:
 
-            response = requests.get(
-                url,
-                params=params,
-                timeout=20
-            )
+        response = requests.get(
+            url,
+            params=params,
+            timeout=15
+        )
 
-            if response.status_code == 200:
-                return response.json()
+        # Successful response
+        if response.status_code == 200:
 
-            # Rate limit
-            if response.status_code == 429:
+            data = response.json()
 
-                print(
-                    "Weather API rate limit reached. Retrying..."
-                )
+            data["fallback"] = False
 
-                time.sleep(2 * (attempt + 1))
+            return data
 
-                continue
+        # ======================================
+        # RATE LIMIT
+        # ======================================
 
-            response.raise_for_status()
-
-        except requests.RequestException as error:
+        if response.status_code == 429:
 
             print(
-                f"Weather API attempt {attempt + 1} failed: {error}"
+                "Open-Meteo rate limit reached."
             )
 
-            time.sleep(2 * (attempt + 1))
+            print(
+                "Using fallback weather data."
+            )
 
-    # Fallback weather data
-    print(
-        "Using fallback weather data. "
-        "Live weather API is temporarily unavailable."
-    )
+            return get_fallback_weather()
+
+        # ======================================
+        # OTHER HTTP ERROR
+        # ======================================
+
+        response.raise_for_status()
+
+    except requests.RequestException as error:
+
+        print(
+            f"Weather API unavailable: {error}"
+        )
+
+        print(
+            "Using fallback weather data."
+        )
+
+        return get_fallback_weather()
+
+
+# ==========================================
+# FALLBACK WEATHER
+# ==========================================
+
+def get_fallback_weather():
 
     return {
+
         "current": {
+
             "temperature_2m": 27.0,
+
             "relative_humidity_2m": 70,
+
             "rain": 0.0,
+
             "wind_speed_10m": 12.0
+
         },
 
         "daily": {
+
             "precipitation_sum": [
                 0.0,
                 1.2,
@@ -95,7 +122,9 @@ def get_weather(latitude, longitude):
                 18.0,
                 14.0
             ]
+
         },
 
         "fallback": True
+
     }

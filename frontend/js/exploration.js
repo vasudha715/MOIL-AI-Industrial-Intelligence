@@ -1,20 +1,19 @@
 // ==========================================
-// MOIL AI — EXPLORATION PAGE
+// MOIL AI - EXPLORATION PAGE CONTROLLER
 // ==========================================
 
-
-// ==========================================
-// ELEMENT HELPERS
-// ==========================================
+// ------------------------------------------
+// HELPER
+// ------------------------------------------
 
 function getElement(id) {
     return document.getElementById(id);
 }
 
 
-// ==========================================
+// ------------------------------------------
 // SAFE VALUE
-// ==========================================
+// ------------------------------------------
 
 function safeValue(value, fallback = "-") {
 
@@ -30,9 +29,9 @@ function safeValue(value, fallback = "-") {
 }
 
 
-// ==========================================
-// NUMBER FORMAT
-// ==========================================
+// ------------------------------------------
+// FORMAT NUMBER
+// ------------------------------------------
 
 function formatNumber(value, decimals = 2) {
 
@@ -49,15 +48,14 @@ function formatNumber(value, decimals = 2) {
 }
 
 
-// ==========================================
+// ------------------------------------------
 // PRIORITY BADGE
-// ==========================================
+// ------------------------------------------
 
 function getPriorityClass(priority) {
 
-    const value = String(
-        priority || ""
-    ).toLowerCase();
+    const value =
+        String(priority || "").toLowerCase();
 
     if (value.includes("very high")) {
         return "bg-danger";
@@ -67,7 +65,10 @@ function getPriorityClass(priority) {
         return "bg-warning text-dark";
     }
 
-    if (value.includes("medium")) {
+    if (
+        value.includes("moderate") ||
+        value.includes("medium")
+    ) {
         return "bg-info text-dark";
     }
 
@@ -79,11 +80,15 @@ function getPriorityClass(priority) {
 }
 
 
-// ==========================================
+// ------------------------------------------
 // GET ZONE VALUE
-// ==========================================
+// ------------------------------------------
 
-function getZoneValue(zone, names, fallback = null) {
+function getZoneValue(
+    zone,
+    names,
+    fallback = null
+) {
 
     for (const name of names) {
 
@@ -101,7 +106,7 @@ function getZoneValue(zone, names, fallback = null) {
 
 
 // ==========================================
-// RENDER ALL EXPLORATION ZONES
+// RENDER ALL 100 EXPLORATION ZONES
 // ==========================================
 
 function renderAllZones(data) {
@@ -112,24 +117,20 @@ function renderAllZones(data) {
     const count =
         getElement("allZonesCount");
 
-
     if (!table) {
 
         console.warn(
-            "allZonesTable element not found."
+            "allZonesTable not found."
         );
 
         return;
     }
 
 
-    // ======================================
-    // BACKEND RETURNS:
-    // data.exploration_zones
-    // ======================================
-
     let zones = [];
 
+
+    // Backend sends the complete grid here
     if (
         data &&
         Array.isArray(
@@ -139,20 +140,16 @@ function renderAllZones(data) {
 
         zones =
             data.exploration_zones;
-
     }
 
 
     console.log(
-        "Total exploration zones:",
+        "Total exploration zones received:",
         zones.length
     );
 
 
-    // ======================================
-    // UPDATE COUNT
-    // ======================================
-
+    // Update badge
     if (count) {
 
         count.textContent =
@@ -160,11 +157,8 @@ function renderAllZones(data) {
     }
 
 
-    // ======================================
-    // NO DATA
-    // ======================================
-
-    if (!zones.length) {
+    // No zones
+    if (zones.length === 0) {
 
         table.innerHTML = `
             <tr>
@@ -181,209 +175,219 @@ function renderAllZones(data) {
     }
 
 
-    // ======================================
-    // SORT BY PROSPECTIVITY SCORE
-    // ======================================
+    // Sort highest prospectivity first
+    zones =
+        [...zones].sort(
+            function (a, b) {
 
-    zones = [...zones].sort(
-        (a, b) => {
+                const scoreA =
+                    Number(
+                        getZoneValue(
+                            a,
+                            [
+                                "PROSPECTIVITY_SCORE",
+                                "prospectivity_score",
+                                "prospectivity",
+                                "score"
+                            ],
+                            0
+                        )
+                    );
 
-            const scoreA = Number(
+                const scoreB =
+                    Number(
+                        getZoneValue(
+                            b,
+                            [
+                                "PROSPECTIVITY_SCORE",
+                                "prospectivity_score",
+                                "prospectivity",
+                                "score"
+                            ],
+                            0
+                        )
+                    );
+
+                return scoreB - scoreA;
+            }
+        );
+
+
+    let html = "";
+
+
+    zones.forEach(
+        function (zone, index) {
+
+            const zoneId =
                 getZoneValue(
-                    a,
+                    zone,
+                    [
+                        "zone_id",
+                        "ZONE_ID",
+                        "id",
+                        "ID"
+                    ],
+                    `ZONE_${String(
+                        index + 1
+                    ).padStart(3, "0")}`
+                );
+
+
+            const score =
+                getZoneValue(
+                    zone,
                     [
                         "PROSPECTIVITY_SCORE",
                         "prospectivity_score",
-                        "prospectivity"
+                        "prospectivity",
+                        "score"
                     ],
                     0
-                )
-            );
+                );
 
-            const scoreB = Number(
+
+            const priority =
                 getZoneValue(
-                    b,
+                    zone,
                     [
-                        "PROSPECTIVITY_SCORE",
-                        "prospectivity_score",
-                        "prospectivity"
+                        "PRIORITY",
+                        "priority",
+                        "priority_level"
                     ],
-                    0
-                )
-            );
+                    "LOW"
+                );
 
-            return scoreB - scoreA;
+
+            const latitude =
+                getZoneValue(
+                    zone,
+                    [
+                        "latitude",
+                        "lat",
+                        "center_lat",
+                        "min_lat"
+                    ],
+                    null
+                );
+
+
+            const longitude =
+                getZoneValue(
+                    zone,
+                    [
+                        "longitude",
+                        "lon",
+                        "center_lon",
+                        "min_lon"
+                    ],
+                    null
+                );
+
+
+            const elevation =
+                getZoneValue(
+                    zone,
+                    [
+                        "elevation",
+                        "elevation_m",
+                        "ELEVATION",
+                        "mean_elevation"
+                    ],
+                    null
+                );
+
+
+            const distance =
+                getZoneValue(
+                    zone,
+                    [
+                        "distance_to_manganese_km",
+                        "distance_to_mn_km",
+                        "distance_to_mn",
+                        "DISTANCE_TO_MN_KM"
+                    ],
+                    null
+                );
+
+
+            html += `
+                <tr>
+
+                    <td>
+                        ${index + 1}
+                    </td>
+
+                    <td>
+                        <strong>
+                            ${safeValue(zoneId)}
+                        </strong>
+                    </td>
+
+                    <td>
+                        <strong>
+                            ${formatNumber(
+                                score,
+                                4
+                            )}
+                        </strong>
+                    </td>
+
+                    <td>
+
+                        <span
+                            class="badge ${getPriorityClass(
+                                priority
+                            )}"
+                        >
+                            ${safeValue(
+                                priority
+                            )}
+                        </span>
+
+                    </td>
+
+                    <td>
+                        ${formatNumber(
+                            latitude,
+                            6
+                        )}
+                    </td>
+
+                    <td>
+                        ${formatNumber(
+                            longitude,
+                            6
+                        )}
+                    </td>
+
+                    <td>
+                        ${formatNumber(
+                            elevation,
+                            2
+                        )}
+                    </td>
+
+                    <td>
+                        ${formatNumber(
+                            distance,
+                            2
+                        )}
+                    </td>
+
+                </tr>
+            `;
         }
     );
 
 
-    // ======================================
-    // BUILD TABLE
-    // ======================================
-
-    table.innerHTML = zones
-        .map(
-            (zone, index) => {
-
-                const zoneId =
-                    getZoneValue(
-                        zone,
-                        [
-                            "ZONE_ID",
-                            "zone_id",
-                            "ZONE",
-                            "zone",
-                            "id"
-                        ],
-                        `Z${String(
-                            index + 1
-                        ).padStart(3, "0")}`
-                    );
+    table.innerHTML = html;
 
 
-                const score =
-                    getZoneValue(
-                        zone,
-                        [
-                            "PROSPECTIVITY_SCORE",
-                            "prospectivity_score",
-                            "prospectivity"
-                        ],
-                        0
-                    );
-
-
-                const priority =
-                    getZoneValue(
-                        zone,
-                        [
-                            "PRIORITY",
-                            "priority",
-                            "PRIORITY_LEVEL",
-                            "priority_level"
-                        ],
-                        "Unknown"
-                    );
-
-
-                const latitude =
-                    getZoneValue(
-                        zone,
-                        [
-                            "CENTER_LAT",
-                            "center_lat",
-                            "LATITUDE",
-                            "latitude",
-                            "lat"
-                        ]
-                    );
-
-
-                const longitude =
-                    getZoneValue(
-                        zone,
-                        [
-                            "CENTER_LON",
-                            "center_lon",
-                            "LONGITUDE",
-                            "longitude",
-                            "lon"
-                        ]
-                    );
-
-
-                const elevation =
-                    getZoneValue(
-                        zone,
-                        [
-                            "ELEVATION",
-                            "elevation",
-                            "ELEVATION_M",
-                            "elevation_m"
-                        ]
-                    );
-
-
-                const distance =
-                    getZoneValue(
-                        zone,
-                        [
-                            "DISTANCE_TO_MN_KM",
-                            "distance_to_mn_km",
-                            "DISTANCE_TO_MANGANESE_KM",
-                            "distance_to_manganese_km"
-                        ]
-                    );
-
-
-                return `
-                    <tr>
-
-                        <td>
-                            ${index + 1}
-                        </td>
-
-                        <td>
-                            <strong>
-                                ${safeValue(zoneId)}
-                            </strong>
-                        </td>
-
-                        <td>
-                            <strong>
-                                ${formatNumber(
-                                    score,
-                                    2
-                                )}
-                            </strong>
-                        </td>
-
-                        <td>
-                            <span
-                                class="badge ${getPriorityClass(
-                                    priority
-                                )}"
-                            >
-                                ${safeValue(
-                                    priority,
-                                    "Unknown"
-                                )}
-                            </span>
-                        </td>
-
-                        <td>
-                            ${formatNumber(
-                                latitude,
-                                5
-                            )}
-                        </td>
-
-                        <td>
-                            ${formatNumber(
-                                longitude,
-                                5
-                            )}
-                        </td>
-
-                        <td>
-                            ${formatNumber(
-                                elevation,
-                                1
-                            )}
-                        </td>
-
-                        <td>
-                            ${formatNumber(
-                                distance,
-                                2
-                            )}
-                        </td>
-
-                    </tr>
-                `;
-            }
-        )
-        .join("");
+    console.log(
+        "All exploration zones rendered:",
+        zones.length
+    );
 }
 
 
@@ -393,85 +397,123 @@ function renderAllZones(data) {
 
 function updateExplorationPage(data) {
 
+    if (!data) {
+
+        console.warn(
+            "No exploration data received."
+        );
+
+        return;
+    }
+
+
     console.log(
-        "MOIL Exploration Response:",
-        data
+        "Updating Exploration page..."
     );
 
 
-    // ======================================
-    // RENDER 100-ZONE TABLE
-    // ======================================
+    // --------------------------------------
+    // 1. Render 100-zone table
+    // --------------------------------------
 
     renderAllZones(data);
 
 
-    // ======================================
-    // UPDATE EXISTING STATISTICS
-    // ======================================
+    // --------------------------------------
+    // 2. Update total zone counter
+    // --------------------------------------
+
+    const totalZones =
+        getElement("totalZones");
+
+    if (totalZones) {
+
+        totalZones.textContent =
+            safeValue(
+                data.total_zones,
+                Array.isArray(
+                    data.exploration_zones
+                )
+                    ? data.exploration_zones.length
+                    : 0
+            );
+    }
+
+
+    // --------------------------------------
+    // 3. Update map
+    // --------------------------------------
 
     if (
-        typeof updateExplorationStatistics ===
+        typeof clearMapLayers ===
         "function"
     ) {
 
-        updateExplorationStatistics(
-            data
-        );
+        clearMapLayers();
     }
 
-
-    // ======================================
-    // UPDATE EXISTING MAP
-    // ======================================
 
     if (
-        typeof updateExplorationMap ===
-        "function"
+        typeof drawExplorationZones ===
+        "function" &&
+        Array.isArray(
+            data.exploration_zones
+        )
     ) {
 
-        updateExplorationMap(
-            data
+        drawExplorationZones(
+            data.exploration_zones
         );
-
     }
-    else if (
-        typeof renderExplorationMap ===
-        "function"
+
+
+    if (
+        typeof drawTopPriorityZones ===
+        "function" &&
+        Array.isArray(
+            data.top_zones
+        )
     ) {
 
-        renderExplorationMap(
-            data
+        drawTopPriorityZones(
+            data.top_zones
         );
     }
+
+
+    console.log(
+        "Exploration page updated successfully."
+    );
 }
 
 
 // ==========================================
-// RUN EXPLORATION ANALYSIS
+// RUN AI EXPLORATION ANALYSIS
 // ==========================================
 
 async function runExplorationAnalysis() {
 
+    const button =
+        getElement("analyzeButton");
+
+
+    if (!button) {
+
+        console.error(
+            "Analyze button not found."
+        );
+
+        return;
+    }
+
+
+    // --------------------------------------
+    // LOCATION
+    // --------------------------------------
+
     const locationInput =
         getElement("locationInput");
 
-    const gridRowsInput =
-        getElement("gridRows");
-
-    const gridColsInput =
-        getElement("gridCols");
-
-    const bufferInput =
-        getElement("bufferDegrees");
-
-    const button =
-        getElement("runAnalysisBtn");
-
-
-    // ======================================
-    // READ INPUTS
-    // ======================================
 
     const location =
         locationInput
@@ -479,63 +521,137 @@ async function runExplorationAnalysis() {
             : "Keonjhar, Odisha";
 
 
-    const gridRows =
-        gridRowsInput
-            ? Number(
-                gridRowsInput.value
-            )
-            : 10;
+    // --------------------------------------
+    // GRID SIZE
+    // --------------------------------------
 
+    const gridInput =
+        getElement("gridSize");
+
+
+    let gridSize = 10;
+
+
+    if (gridInput) {
+
+        const value =
+            parseInt(
+                gridInput.value,
+                10
+            );
+
+
+        if (!isNaN(value)) {
+
+            gridSize = value;
+        }
+    }
+
+
+    const gridRows =
+        gridSize;
 
     const gridCols =
-        gridColsInput
-            ? Number(
-                gridColsInput.value
-            )
-            : 10;
+        gridSize;
 
 
-    const bufferDegrees =
-        bufferInput
-            ? Number(
+    // --------------------------------------
+    // AREA BUFFER
+    // --------------------------------------
+
+    const bufferInput =
+        getElement("bufferSize");
+
+
+    let bufferDegrees =
+        0.01;
+
+
+    if (bufferInput) {
+
+        const value =
+            parseFloat(
                 bufferInput.value
-            )
-            : 0.01;
+            );
 
 
-    // ======================================
-    // BUTTON LOADING STATE
-    // ======================================
+        if (!isNaN(value)) {
 
-    if (button) {
-
-        button.disabled = true;
-
-        button.dataset.originalText =
-            button.textContent;
-
-        button.textContent =
-            "Analyzing...";
+            bufferDegrees =
+                value;
+        }
     }
+
+
+    // --------------------------------------
+    // BUTTON STATE
+    // --------------------------------------
+
+    const originalText =
+        button.textContent;
+
+
+    button.disabled = true;
+
+    button.textContent =
+        "Analyzing...";
 
 
     try {
 
-        // ==================================
-        // CALL REAL MOIL API
-        // ==================================
+        console.log(
+            "================================"
+        );
+
+        console.log(
+            "STARTING MOIL AI ANALYSIS"
+        );
+
+        console.log(
+            "================================"
+        );
+
+
+        console.log(
+            "Location:",
+            location
+        );
+
+
+        console.log(
+            "Grid:",
+            gridRows,
+            "x",
+            gridCols
+        );
+
+
+        console.log(
+            "Buffer:",
+            bufferDegrees
+        );
+
+
+        // ----------------------------------
+        // CHECK API
+        // ----------------------------------
 
         if (
             !window.MOILAPI ||
-            typeof window.MOILAPI.analyzeArea !==
-            "function"
+            typeof
+                window.MOILAPI.analyzeArea
+                !== "function"
         ) {
 
             throw new Error(
-                "MOIL API client is not available."
+                "MOILAPI.analyzeArea is not available."
             );
         }
 
+
+        // ----------------------------------
+        // CALL FASTAPI BACKEND
+        // ----------------------------------
 
         const data =
             await window.MOILAPI.analyzeArea(
@@ -547,79 +663,77 @@ async function runExplorationAnalysis() {
 
 
         console.log(
-            "Exploration analysis completed:",
+            "Backend response:",
             data
         );
 
 
-        // ==================================
-        // UPDATE PAGE
-        // ==================================
+        // ----------------------------------
+        // VALIDATE RESPONSE
+        // ----------------------------------
+
+        if (
+            !data ||
+            data.status !== "success"
+        ) {
+
+            throw new Error(
+                "Backend returned an unsuccessful response."
+            );
+        }
+
+
+        // ----------------------------------
+        // STORE RESPONSE
+        // ----------------------------------
+
+        window.lastExplorationData =
+            data;
+
+
+        // ----------------------------------
+        // UPDATE EVERYTHING
+        // ----------------------------------
 
         updateExplorationPage(
             data
         );
 
 
-        // ==================================
-        // STORE LAST RESULT
-        // ==================================
+        console.log(
+            "================================"
+        );
 
-        window.lastExplorationData =
-            data;
+        console.log(
+            "AI ANALYSIS COMPLETED"
+        );
+
+        console.log(
+            "================================"
+        );
 
 
-    }
-    catch (error) {
+    } catch (error) {
 
         console.error(
-            "Exploration analysis failed:",
+            "Exploration analysis error:",
             error
         );
 
 
-        const table =
-            getElement(
-                "allZonesTable"
-            );
-
-
-        if (table) {
-
-            table.innerHTML = `
-                <tr>
-                    <td
-                        colspan="8"
-                        class="text-center text-danger py-4"
-                    >
-                        Exploration analysis failed:
-                        ${safeValue(
-                            error.message,
-                            "Please try again."
-                        )}
-                    </td>
-                </tr>
-            `;
-        }
-
-
         alert(
-            "Exploration analysis failed. " +
+            "Exploration analysis failed:\n\n" +
             error.message
         );
 
 
-    }
-    finally {
+    } finally {
 
-        if (button) {
+        button.disabled =
+            false;
 
-            button.disabled = false;
-
-            button.textContent =
-                button.dataset.originalText ||
-                "Run AI Analysis";
-        }
+        button.textContent =
+            originalText;
     }
 }
 
@@ -630,41 +744,71 @@ async function runExplorationAnalysis() {
 
 document.addEventListener(
     "DOMContentLoaded",
-    () => {
+    function () {
 
         console.log(
             "MOIL AI Exploration page loaded."
         );
 
 
-        // ==================================
-        // RUN ANALYSIS BUTTON
-        // ==================================
+        // ----------------------------------
+        // INITIALIZE LEAFLET MAP
+        // ----------------------------------
 
-        const button =
-            getElement(
-                "runAnalysisBtn"
-            );
+        if (
+            typeof initializeMap ===
+            "function"
+        ) {
 
+            initializeMap();
 
-        if (button) {
+        } else {
 
-            button.addEventListener(
-                "click",
-                runExplorationAnalysis
+            console.error(
+                "initializeMap() not found."
             );
         }
 
 
-        // ==================================
-        // RENDER EXISTING DATA
-        // ==================================
+        // ----------------------------------
+        // CONNECT ANALYZE BUTTON
+        // ----------------------------------
+
+        const analyzeButton =
+            getElement(
+                "analyzeButton"
+            );
+
+
+        if (analyzeButton) {
+
+            analyzeButton.addEventListener(
+                "click",
+                runExplorationAnalysis
+            );
+
+
+            console.log(
+                "Analyze button connected successfully."
+            );
+
+        } else {
+
+            console.error(
+                "ERROR: analyzeButton not found."
+            );
+        }
+
+
+        // ----------------------------------
+        // RESTORE PREVIOUS DATA
+        // ----------------------------------
 
         if (
             window.lastExplorationData
         ) {
 
-            renderAllZones(
+            updateExplorationPage(
                 window.lastExplorationData
             );
         }
