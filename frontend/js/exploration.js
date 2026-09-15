@@ -106,7 +106,7 @@ function getZoneValue(
 
 
 // ==========================================
-// RENDER ALL 100 EXPLORATION ZONES
+// RENDER ALL EXPLORATION ZONES
 // ==========================================
 
 function renderAllZones(data) {
@@ -126,11 +126,8 @@ function renderAllZones(data) {
         return;
     }
 
-
     let zones = [];
 
-
-    // Backend sends the complete grid here
     if (
         data &&
         Array.isArray(
@@ -142,14 +139,16 @@ function renderAllZones(data) {
             data.exploration_zones;
     }
 
-
     console.log(
         "Total exploration zones received:",
         zones.length
     );
 
 
-    // Update badge
+    // --------------------------------------
+    // UPDATE ZONE COUNT BADGE
+    // --------------------------------------
+
     if (count) {
 
         count.textContent =
@@ -157,7 +156,10 @@ function renderAllZones(data) {
     }
 
 
-    // No zones
+    // --------------------------------------
+    // NO ZONES
+    // --------------------------------------
+
     if (zones.length === 0) {
 
         table.innerHTML = `
@@ -175,7 +177,10 @@ function renderAllZones(data) {
     }
 
 
-    // Sort highest prospectivity first
+    // --------------------------------------
+    // SORT BY PROSPECTIVITY
+    // --------------------------------------
+
     zones =
         [...zones].sort(
             function (a, b) {
@@ -213,8 +218,11 @@ function renderAllZones(data) {
         );
 
 
-    let html = "";
+    // --------------------------------------
+    // BUILD TABLE
+    // --------------------------------------
 
+    let html = "";
 
     zones.forEach(
         function (zone, index) {
@@ -334,7 +342,6 @@ function renderAllZones(data) {
                     </td>
 
                     <td>
-
                         <span
                             class="badge ${getPriorityClass(
                                 priority
@@ -344,7 +351,6 @@ function renderAllZones(data) {
                                 priority
                             )}
                         </span>
-
                     </td>
 
                     <td>
@@ -408,41 +414,228 @@ function updateExplorationPage(data) {
 
 
     console.log(
-        "Updating Exploration page..."
+        "Updating Exploration page...",
+        data
     );
 
 
-    // --------------------------------------
-    // 1. Render 100-zone table
-    // --------------------------------------
+    // ======================================
+    // 1. LOCATION
+    // ======================================
 
-    renderAllZones(data);
+    const locationResult =
+        getElement("locationResult");
+
+    if (locationResult) {
+
+        let locationText =
+            data.location;
+
+        if (
+            locationText &&
+            typeof locationText === "object"
+        ) {
+
+            locationText =
+                locationText.display_name ||
+                locationText.name ||
+                locationText.location ||
+                locationText.address ||
+                "Analyzed Location";
+        }
+
+        locationResult.textContent =
+            safeValue(
+                locationText,
+                "Analyzed"
+            );
+    }
 
 
-    // --------------------------------------
-    // 2. Update total zone counter
-    // --------------------------------------
+    // ======================================
+    // 2. TOTAL ZONES
+    // ======================================
 
     const totalZones =
         getElement("totalZones");
+
+    const zones =
+        Array.isArray(
+            data.exploration_zones
+        )
+            ? data.exploration_zones
+            : [];
+
 
     if (totalZones) {
 
         totalZones.textContent =
             safeValue(
                 data.total_zones,
-                Array.isArray(
-                    data.exploration_zones
-                )
-                    ? data.exploration_zones.length
-                    : 0
+                zones.length
             );
     }
 
 
-    // --------------------------------------
-    // 3. Update map
-    // --------------------------------------
+    // ======================================
+    // 3. HIGH PRIORITY
+    // ======================================
+
+    const highPriority =
+        getElement("highPriority");
+
+    if (highPriority) {
+
+        let highCount = 0;
+
+
+        // Try backend priority summary
+        if (
+            data.priority_summary &&
+            typeof data.priority_summary === "object"
+        ) {
+
+            const summary =
+                data.priority_summary;
+
+            highCount =
+                Number(
+                    summary["HIGH"] ??
+                    summary["High"] ??
+                    summary["high"] ??
+                    summary["VERY HIGH"] ??
+                    summary["Very High"] ??
+                    summary["very high"] ??
+                    0
+                );
+        }
+
+
+        // Fallback: calculate from zones
+        if (
+            !highCount &&
+            zones.length
+        ) {
+
+            highCount =
+                zones.filter(
+                    function (zone) {
+
+                        const priority =
+                            String(
+                                getZoneValue(
+                                    zone,
+                                    [
+                                        "PRIORITY",
+                                        "priority",
+                                        "priority_level"
+                                    ],
+                                    ""
+                                )
+                            ).toLowerCase();
+
+
+                        return priority.includes(
+                            "high"
+                        );
+                    }
+                ).length;
+        }
+
+
+        highPriority.textContent =
+            highCount;
+    }
+
+
+    // ======================================
+    // 4. WEATHER RISK
+    // ======================================
+
+    const weatherRisk =
+        getElement("weatherRisk");
+
+    if (weatherRisk) {
+
+        let risk =
+            data.weather_risk;
+
+
+        if (
+            risk &&
+            typeof risk === "object"
+        ) {
+
+            risk =
+                risk.risk_level ||
+                risk.risk ||
+                risk.level ||
+                risk.category ||
+                "-";
+        }
+
+
+        weatherRisk.textContent =
+            safeValue(
+                risk,
+                "-"
+            );
+
+
+        // ----------------------------------
+        // WEATHER RISK COLOR
+        // ----------------------------------
+
+        const riskText =
+            String(
+                risk || ""
+            ).toLowerCase();
+
+
+        weatherRisk.classList.remove(
+            "text-success",
+            "text-warning",
+            "text-danger"
+        );
+
+
+        if (
+            riskText.includes("high") ||
+            riskText.includes("severe")
+        ) {
+
+            weatherRisk.classList.add(
+                "text-danger"
+            );
+
+        } else if (
+            riskText.includes("medium") ||
+            riskText.includes("moderate")
+        ) {
+
+            weatherRisk.classList.add(
+                "text-warning"
+            );
+
+        } else {
+
+            weatherRisk.classList.add(
+                "text-success"
+            );
+        }
+    }
+
+
+    // ======================================
+    // 5. RENDER ALL ZONES
+    // ======================================
+
+    renderAllZones(data);
+
+
+    // ======================================
+    // 6. UPDATE MAP
+    // ======================================
 
     if (
         typeof clearMapLayers ===
@@ -456,13 +649,11 @@ function updateExplorationPage(data) {
     if (
         typeof drawExplorationZones ===
         "function" &&
-        Array.isArray(
-            data.exploration_zones
-        )
+        zones.length
     ) {
 
         drawExplorationZones(
-            data.exploration_zones
+            zones
         );
     }
 
@@ -591,7 +782,8 @@ async function runExplorationAnalysis() {
         button.textContent;
 
 
-    button.disabled = true;
+    button.disabled =
+        true;
 
     button.textContent =
         "Analyzing...";
@@ -650,7 +842,7 @@ async function runExplorationAnalysis() {
 
 
         // ----------------------------------
-        // CALL FASTAPI BACKEND
+        // CALL FASTAPI
         // ----------------------------------
 
         const data =
@@ -692,7 +884,7 @@ async function runExplorationAnalysis() {
 
 
         // ----------------------------------
-        // UPDATE EVERYTHING
+        // UPDATE PAGE
         // ----------------------------------
 
         updateExplorationPage(
@@ -752,7 +944,7 @@ document.addEventListener(
 
 
         // ----------------------------------
-        // INITIALIZE LEAFLET MAP
+        // INITIALIZE MAP
         // ----------------------------------
 
         if (
