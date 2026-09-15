@@ -1,12 +1,6 @@
 // ==========================================
-// MOIL AI â€” FRONTEND CONFIG
-// ==========================================
-// Change this one line when you deploy the backend somewhere other than
-// your own machine (e.g. https://api.yourdomain.com).
-
-// ==========================================
-// MOIL AI BACKEND CONFIGURATION
+// MOIL AI — FRONTEND CONFIG
 // ==========================================
 
 window.BACKEND_BASE_URL =
-    "https://moil-ai-industrial-intelligence.onrender.com";
+    "http://127.0.0.1:8000";
